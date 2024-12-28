@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,8 +26,18 @@ class ProjectResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make("name")->required(),
                 Forms\Components\TextInput::make("description")->required(),
-                Forms\Components\DatePicker::make("start_date")->required()->default((new DateTimeImmutable())->format(DateTimeInterface::ATOM)),
-                Forms\Components\DatePicker::make("end_date"),
+                Forms\Components\DatePicker::make("start_date")
+                    ->required()
+                    ->reactive()
+                    ->maxDate(function (Get $get) {
+                        return $get("end_date");
+                    })
+                    ->default((new DateTimeImmutable())->format(DateTimeInterface::ATOM)),
+                Forms\Components\DatePicker::make("end_date")
+                    ->reactive()
+                    ->minDate(function (Get $get) {
+                        return $get("start_date");
+                    }),
             ]);
     }
 
