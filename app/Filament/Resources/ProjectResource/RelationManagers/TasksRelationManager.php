@@ -21,7 +21,7 @@ class TasksRelationManager extends RelationManager
         return $form
             ->schema([
                 Forms\Components\TextInput::make("name")->required(),
-                Forms\Components\TextInput::make("description")->required(),
+                Forms\Components\Textarea::make("description")->required(),
                 Forms\Components\DatePicker::make("start_date")
                     ->required()
                     ->reactive()
@@ -46,10 +46,10 @@ class TasksRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute("description")
+            ->recordTitleAttribute("name")
             ->columns([
                 Tables\Columns\TextColumn::make("name")->searchable()->sortable(),
-                Tables\Columns\TextColumn::make("description")->searchable(),
+                Tables\Columns\TextColumn::make("description")->searchable()->words(10),
                 Tables\Columns\TextColumn::make("start_date")->searchable()->sortable(),
                 Tables\Columns\TextColumn::make("end_date")->searchable()->sortable(),
                 Tables\Columns\TextColumn::make("status")->searchable()->sortable(),
